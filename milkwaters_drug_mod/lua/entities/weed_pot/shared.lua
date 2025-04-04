@@ -10,33 +10,30 @@ ENT.AdminSpawnable = true
 ENT.AutomaticFrameAdvance = true
 
 -- my variables
--- there are 8 stages
 ENT.PlantStage = 0
--- 1 minute per stage until the final stage which is 3 minutes
 ENT.GrowthTime = 0
--- only grows when watered
-ENT.IsWatered = false
 ENT.WaterAmount = 0
 
 if SERVER then
 	-- called when you spawn it
 	function ENT:Initialize()
-		-- initialize model
-		self:SetModel("models/weed/weed_plant_empty/weed_plant_empty.mdl")
-		self:PhysicsInit(SOLID_VPHYSICS)
-		self:SetMoveType(MOVETYPE_VPHYSICS)
-		self:SetSolid(SOLID_VPHYSICS)
-		
-		-- initialize vars
-		self.PlantStage = 0
-		self.GrowthTime = 0
-		self.IsWatered = false
-		self.WaterAmount = 0
-		
 		-- network the variables, needed for the client to see the 3d2d text
 		self:SetNWInt("PlantStage", self.PlantStage)
 		self:SetNWInt("WaterAmount", self.WaterAmount)
 		self:SetNWBool("GrowthTime", self.GrowthTime)
+	
+		-- initialize model
+		self:SetModel("models/weed/weed_plant_empty/weed_plant_empty.mdl")
+		if self.PlantStage == 1 then
+			self:SetModel("models/weed/weed_plant_small01/weed_plant_small01.mdl")
+		elseif self.PlantStage == 2 then
+			self:SetModel("models/weed/weed_plant_medium01/weed_plant_medium01.mdl")
+		elseif self.PlantStage == 3 then
+			self:SetModel("models/weed/weed_plant_large01/weed_plant_large01.mdl")
+		end
+		self:PhysicsInit(SOLID_VPHYSICS)
+		self:SetMoveType(MOVETYPE_VPHYSICS)
+		self:SetSolid(SOLID_VPHYSICS)
 	end
 
 	-- called when someone presses "E" on it
